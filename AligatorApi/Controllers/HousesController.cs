@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AligatorApi.Context;
 using AligatorApi.Models;
+using AligatorApi.Repository;
 
 namespace AligatorApi.Controllers
 {
@@ -14,25 +15,25 @@ namespace AligatorApi.Controllers
     [ApiController]
     public class HousesController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly UnitOfWork _uow;
 
-        public HousesController(DatabaseContext context)
+        public HousesController(UnitOfWork context)
         {
-            _context = context;
+            _uow = context;
         }
 
         // GET: api/Houses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<House>>> GetHouse()
+        public  ActionResult<IEnumerable<House>> GetHouse()
         {
-            return await _context.House.ToListAsync();
+            return  _uow.RepositoryHouse.Get().ToList();
         }
 
         // GET: api/Houses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<House>> GetHouse(int id)
+        public  ActionResult<House> GetHouse(int id)
         {
-            var house = await _context.House.FindAsync(id);
+            var house =  _uow.RepositoryHouse.GetById(h => h.Id == id);
 
             if (house == null)
             {
@@ -46,18 +47,18 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutHouse(int id, House house)
+        public  IActionResult PutHouse(int id, House house)
         {
             if (id != house.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(house).State = EntityState.Modified;
+            _uow.RepositoryHouse.Update(house);
 
             try
             {
-                await _context.SaveChangesAsync();
+                _uow.Commit();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,33 +79,33 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<House>> PostHouse(House house)
+        public  ActionResult<House> PostHouse(House house)
         {
-            _context.House.Add(house);
-            await _context.SaveChangesAsync();
+            _uow.RepositoryHouse.Add(house);
+             _uow.Commit();
 
             return CreatedAtAction("GetHouse", new { id = house.Id }, house);
         }
 
         // DELETE: api/Houses/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<House>> DeleteHouse(int id)
+        public  ActionResult<House> DeleteHouse(int id)
         {
-            var house = await _context.House.FindAsync(id);
+            var house =  _uow.RepositoryHouse.GetById(h => h.Id == id);
             if (house == null)
             {
                 return NotFound();
             }
 
-            _context.House.Remove(house);
-            await _context.SaveChangesAsync();
+            _uow.RepositoryHouse.Delete(house);
+             _uow.Commit();
 
             return house;
         }
 
         private bool HouseExists(int id)
         {
-            return _context.House.Any(e => e.Id == id);
+            return _uow.RepositoryHouse.GetById(e => e.Id == id) != null;
         }
     }
 }

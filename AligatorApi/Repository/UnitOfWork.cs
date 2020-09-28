@@ -20,7 +20,7 @@ namespace AligatorApi.Repository
         {
             get
             {
-                return _repositoryBill ?? new RepositoryBill(_context);
+                return _repositoryBill ??= new RepositoryBill(_context);
             }
         }
 
@@ -28,7 +28,7 @@ namespace AligatorApi.Repository
         {
             get
             {
-                return _repositoryHouse ?? new RepositoryHouse(_context);
+                return _repositoryHouse ??= new RepositoryHouse(_context);
             }
         }
 
@@ -36,7 +36,7 @@ namespace AligatorApi.Repository
         {
             get
             {
-                return _repositoryNotice ?? new RepositoryNotice(_context);
+                return _repositoryNotice ??= new RepositoryNotice(_context);
             }
         }
 
@@ -44,7 +44,7 @@ namespace AligatorApi.Repository
         {
             get
             {
-                return _repositoryPerson ?? new RepositoryPerson(_context);
+                return _repositoryPerson ??= new RepositoryPerson(_context);
             }
         }
 
@@ -52,7 +52,7 @@ namespace AligatorApi.Repository
         {
             get
             {
-                return _repositoryTask ?? new RepositoryTask(_context);
+                return _repositoryTask ??= new RepositoryTask(_context);
             }
         }
 

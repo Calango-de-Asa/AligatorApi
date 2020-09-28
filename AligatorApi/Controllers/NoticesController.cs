@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AligatorApi.Context;
 using AligatorApi.Models;
+using AligatorApi.Repository;
 
 namespace AligatorApi.Controllers
 {
@@ -14,25 +15,25 @@ namespace AligatorApi.Controllers
     [ApiController]
     public class NoticesController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly UnitOfWork _uow;
 
-        public NoticesController(DatabaseContext context)
+        public NoticesController(UnitOfWork context)
         {
-            _context = context;
+            _uow = context;
         }
 
         // GET: api/Notices
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Notice>>> GetNotices()
+        public  ActionResult<IEnumerable<Notice>> GetNotices()
         {
-            return await _context.Notices.ToListAsync();
+            return  _uow.RepositoryNotice.Get().ToList();
         }
 
         // GET: api/Notices/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Notice>> GetNotice(int id)
+        public  ActionResult<Notice> GetNotice(int id)
         {
-            var notice = await _context.Notices.FindAsync(id);
+            var notice =  _uow.RepositoryNotice.GetById(n => n.Id == id);
 
             if (notice == null)
             {
@@ -46,18 +47,18 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutNotice(int id, Notice notice)
+        public  IActionResult PutNotice(int id, Notice notice)
         {
             if (id != notice.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(notice).State = EntityState.Modified;
+            _uow.RepositoryNotice.Update(notice);
 
             try
             {
-                await _context.SaveChangesAsync();
+                _uow.Commit();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,33 +79,33 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Notice>> PostNotice(Notice notice)
+        public  ActionResult<Notice> PostNotice(Notice notice)
         {
-            _context.Notices.Add(notice);
-            await _context.SaveChangesAsync();
+            _uow.RepositoryNotice.Add(notice);
+             _uow.Commit();
 
             return CreatedAtAction("GetNotice", new { id = notice.Id }, notice);
         }
 
         // DELETE: api/Notices/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Notice>> DeleteNotice(int id)
+        public  ActionResult<Notice> DeleteNotice(int id)
         {
-            var notice = await _context.Notices.FindAsync(id);
+            var notice =  _uow.RepositoryNotice.GetById(r => r.Id == id);
             if (notice == null)
             {
                 return NotFound();
             }
 
-            _context.Notices.Remove(notice);
-            await _context.SaveChangesAsync();
+            _uow.RepositoryNotice.Delete(notice);
+             _uow.Commit();
 
             return notice;
         }
 
         private bool NoticeExists(int id)
         {
-            return _context.Notices.Any(e => e.Id == id);
+            return _uow.RepositoryNotice.GetById(e => e.Id == id) != null;
         }
     }
 }

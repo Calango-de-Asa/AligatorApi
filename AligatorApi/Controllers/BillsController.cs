@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AligatorApi.Context;
 using AligatorApi.Models;
+using AligatorApi.Repository;
 
 namespace AligatorApi.Controllers
 {
@@ -14,25 +15,25 @@ namespace AligatorApi.Controllers
     [ApiController]
     public class BillsController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly UnitOfWork _uow;
 
-        public BillsController(DatabaseContext context)
+        public BillsController(UnitOfWork context)
         {
-            _context = context;
+            _uow = context;
         }
 
         // GET: api/Bills
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Bill>>> GetBills()
+        public ActionResult<IEnumerable<Bill>> GetBills()
         {
-            return await _context.Bills.ToListAsync();
+            return _uow.RepositoryBill.Get().ToList();
         }
 
         // GET: api/Bills/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Bill>> GetBill(int id)
+        public ActionResult<Bill> GetBill(int id)
         {
-            var bill = await _context.Bills.FindAsync(id);
+            var bill = _uow.RepositoryBill.GetById(p => p.Id == id);
 
             if (bill == null)
             {
@@ -46,18 +47,18 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBill(int id, Bill bill)
+        public IActionResult PutBill(int id, Bill bill)
         {
             if (id != bill.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(bill).State = EntityState.Modified;
+            _uow.RepositoryBill.Update(bill);
 
             try
             {
-                await _context.SaveChangesAsync();
+                _uow.Commit();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,33 +79,33 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Bill>> PostBill(Bill bill)
+        public ActionResult<Bill> PostBill(Bill bill)
         {
-            _context.Bills.Add(bill);
-            await _context.SaveChangesAsync();
+            _uow.RepositoryBill.Add(bill);
+            _uow.Commit();
 
             return CreatedAtAction("GetBill", new { id = bill.Id }, bill);
         }
 
         // DELETE: api/Bills/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Bill>> DeleteBill(int id)
+        public ActionResult<Bill> DeleteBill(int id)
         {
-            var bill = await _context.Bills.FindAsync(id);
+            var bill = _uow.RepositoryBill.GetById(p => p.Id == id);
             if (bill == null)
             {
                 return NotFound();
             }
 
-            _context.Bills.Remove(bill);
-            await _context.SaveChangesAsync();
+            _uow.RepositoryBill.Delete(bill);
+            _uow.Commit();
 
             return bill;
         }
 
         private bool BillExists(int id)
         {
-            return _context.Bills.Any(e => e.Id == id);
+            return _uow.RepositoryBill.GetById(e => e.Id == id) != null;
         }
     }
 }

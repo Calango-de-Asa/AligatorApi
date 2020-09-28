@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AligatorApi.Context;
 using AligatorApi.Models;
+using AligatorApi.Repository;
 
 namespace AligatorApi.Controllers
 {
@@ -14,25 +15,25 @@ namespace AligatorApi.Controllers
     [ApiController]
     public class PeopleController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly UnitOfWork _uow;
 
-        public PeopleController(DatabaseContext context)
+        public PeopleController(UnitOfWork context)
         {
-            _context = context;
+            _uow = context;
         }
 
         // GET: api/People
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetPeople()
+        public  ActionResult<IEnumerable<Person>> GetPeople()
         {
-            return await _context.People.ToListAsync();
+            return  _uow.RepositoryPerson.Get().ToList();
         }
 
         // GET: api/People/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Person>> GetPerson(int id)
+        public  ActionResult<Person> GetPerson(int id)
         {
-            var person = await _context.People.FindAsync(id);
+            var person =  _uow.RepositoryPerson.GetById(p => p.Id == id);
 
             if (person == null)
             {
@@ -46,18 +47,18 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPerson(int id, Person person)
+        public  IActionResult PutPerson(int id, Person person)
         {
             if (id != person.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(person).State = EntityState.Modified;
+            _uow.RepositoryPerson.Update(person);
 
             try
             {
-                await _context.SaveChangesAsync();
+                 _uow.Commit();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -78,33 +79,33 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Person>> PostPerson(Person person)
+        public  ActionResult<Person> PostPerson(Person person)
         {
-            _context.People.Add(person);
-            await _context.SaveChangesAsync();
+            _uow.RepositoryPerson.Add(person);
+            _uow.Commit();
 
             return CreatedAtAction("GetPerson", new { id = person.Id }, person);
         }
 
         // DELETE: api/People/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Person>> DeletePerson(int id)
+        public  ActionResult<Person> DeletePerson(int id)
         {
-            var person = await _context.People.FindAsync(id);
+            var person =  _uow.RepositoryPerson.GetById(p => p.Id == id);
             if (person == null)
             {
                 return NotFound();
             }
 
-            _context.People.Remove(person);
-            await _context.SaveChangesAsync();
+            _uow.RepositoryPerson.Delete(person);
+             _uow.Commit();
 
             return person;
         }
 
         private bool PersonExists(int id)
         {
-            return _context.People.Any(e => e.Id == id);
+            return _uow.RepositoryPerson.GetById(e => e.Id == id) != null;
         }
     }
 }
