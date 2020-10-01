@@ -14,6 +14,12 @@ namespace AligatorApi.Models
             People = new HashSet<Person>();
         }
 
+        public House(int id)
+        {
+            Id = id;
+            People = new HashSet<Person>();
+        }
+
         [Key]
         public int Id { get; set; }
         public virtual ICollection<Person> People { get; set; }

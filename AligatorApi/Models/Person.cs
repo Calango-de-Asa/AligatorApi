@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,10 +16,17 @@ namespace AligatorApi.Models
             PersonTasks = new HashSet<PersonTask>();
         }
 
+        public Person(int id, string name, string email, bool isManager)
+        {
+            Id = id;
+            Name = name;
+            Email = email;
+            IsManager = isManager;
+        }
 
         [Key]
         public int Id { get; set; }
-        public int IdHouse { get; set; }
+        [NotMapped]
         public House House { get; set; }
         [Required]
         [MaxLength(40)]
