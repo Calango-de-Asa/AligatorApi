@@ -1,10 +1,12 @@
 using AligatorApi.Context;
+using AligatorApi.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace AligatorApi
 {
@@ -20,8 +22,12 @@ namespace AligatorApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IUnitOfWork,UnitOfWork>();
+
             services.AddDbContext<DatabaseContext>(options =>
-            options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(Configuration.GetConnectionString("PostgreConnection")));//,
+           // b => b.EnableRetryOnFailure(5, TimeSpan.FromSeconds(1), null)));
+            //options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
         }
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AligatorApi.Repository
 {
-    interface IUnitOfWork
+    public interface IUnitOfWork
     {
         IRepositoryBill RepositoryBill { get; }
         IRepositoryHouse RepositoryHouse { get; }

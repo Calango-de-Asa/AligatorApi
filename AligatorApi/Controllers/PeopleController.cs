@@ -15,9 +15,9 @@ namespace AligatorApi.Controllers
     [ApiController]
     public class PeopleController : ControllerBase
     {
-        private readonly UnitOfWork _uow;
+        private readonly IUnitOfWork _uow;
 
-        public PeopleController(UnitOfWork context)
+        public PeopleController(IUnitOfWork context)
         {
             _uow = context;
         }

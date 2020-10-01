@@ -9,6 +9,8 @@ namespace AligatorApi.Context
             : base(options)
         { }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder ob)
+            => ob.UseNpgsql("Host=127.0.0.1;Port=5432;Pooling=true;Database=aligatordb;Username=postgres;Password=password");
         protected override void OnModelCreating(ModelBuilder mb)
         {
             mb.Entity<PersonBill>().HasKey(pb => new { pb.PersonId, pb.BillId });
@@ -44,7 +46,7 @@ namespace AligatorApi.Context
 
         public DbSet<PersonBill> PersonBills { get; set; }
         public DbSet<PersonTask> PersonTasks { get; set; }
-        public DbSet<AligatorApi.Models.House> House { get; set; }
+        public DbSet<House> House { get; set; }
 
     }
 }
