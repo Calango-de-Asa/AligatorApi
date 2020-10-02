@@ -1,12 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace AligatorApi.Models
+﻿namespace AligatorApi.Models
 {
     public class PersonTask
     {
+        public PersonTask()
+        {
+
+        }
+        public PersonTask(Person person, Task task)
+        {
+            Person = person;
+            PersonId = person.Id;
+            person.PersonTasks.Add(this);
+
+            Task = task;
+            TaskId = task.Id;
+            task.PersonTasks.Add(this);
+        }
+
         public int PersonId { get; set; }
         public Person Person { get; set; }
 

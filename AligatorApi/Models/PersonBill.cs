@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace AligatorApi.Models
+﻿namespace AligatorApi.Models
 {
     public class PersonBill
     {
+        public PersonBill()
+        {
+
+        }
+        public PersonBill(Person person, Bill bill)
+        {
+            Bill = bill;
+            BillId = bill.Id;
+            bill.PersonBills.Add(this);
+
+            Person = person;
+            PersonId = person.Id;
+            person.PersonBills.Add(this);
+        }
+
+        //Learned that this is needed, although this is a DRY violation
         public int BillId { get; set; }
         public Bill Bill { get; set; }
 

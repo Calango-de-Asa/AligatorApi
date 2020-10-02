@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AligatorApi.Models
 {
@@ -12,6 +10,36 @@ namespace AligatorApi.Models
         public Bill()
         {
             PersonBills = new HashSet<PersonBill>();
+        }
+
+        public Bill(int id, string name, string description, DateTime dueTime, Person[] people)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            CreatedAt = DateTime.UtcNow;
+            DueTime = dueTime;
+            IsPaid = false;
+            PersonBills = new HashSet<PersonBill>();
+
+            foreach (Person person in people)
+            {
+                new PersonBill(person, this);
+            }
+        }
+
+        public Bill(int id, string name, string description, DateTime dueTime, Person person)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            CreatedAt = DateTime.UtcNow;
+            DueTime = dueTime;
+            IsPaid = false;
+            PersonBills = new HashSet<PersonBill>();
+
+            new PersonBill(person, this);
+
         }
 
         [Key]
