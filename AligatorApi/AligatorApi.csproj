@@ -13,12 +13,31 @@
     <Compile Remove="Migrations\20200930144808_init.Designer.cs" />
     <Compile Remove="Migrations\20200930144823_populatedb.cs" />
     <Compile Remove="Migrations\20200930144823_populatedb.Designer.cs" />
+    <Compile Remove="Migrations\20200930145445_init.cs" />
+    <Compile Remove="Migrations\20200930145445_init.Designer.cs" />
+    <Compile Remove="Migrations\20200930145458_populatedb.cs" />
+    <Compile Remove="Migrations\20200930145458_populatedb.Designer.cs" />
+    <Compile Remove="Migrations\20201002210910_init.cs" />
+    <Compile Remove="Migrations\20201002210910_init.Designer.cs" />
+    <Compile Remove="Migrations\20201002210919_populatedb.cs" />
+    <Compile Remove="Migrations\20201002210919_populatedb.Designer.cs" />
+    <Compile Remove="Migrations\20201002213331_populatedb.cs" />
+    <Compile Remove="Migrations\20201002213331_populatedb.Designer.cs" />
+    <Compile Remove="Migrations\20201002213458_populatedb.cs" />
+    <Compile Remove="Migrations\20201002213458_populatedb.Designer.cs" />
+    <Compile Remove="Migrations\20201002215926_init.cs" />
+    <Compile Remove="Migrations\20201002215926_init.Designer.cs" />
+    <Compile Remove="Migrations\20201002220053_init.cs" />
+    <Compile Remove="Migrations\20201002220053_init.Designer.cs" />
+    <Compile Remove="Migrations\20201002220258_init.cs" />
+    <Compile Remove="Migrations\20201002220258_init.Designer.cs" />
+    <Compile Remove="Migrations\20201002220459_init.cs" />
+    <Compile Remove="Migrations\20201002220459_init.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
