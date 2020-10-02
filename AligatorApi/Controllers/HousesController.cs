@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AligatorApi.Models;
+using AligatorApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AligatorApi.Context;
-using AligatorApi.Models;
-using AligatorApi.Repository;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AligatorApi.Controllers
 {
@@ -15,9 +11,9 @@ namespace AligatorApi.Controllers
     [ApiController]
     public class HousesController : ControllerBase
     {
-        private readonly UnitOfWork _uow;
+        private readonly IUnitOfWork _uow;
 
-        public HousesController(UnitOfWork context)
+        public HousesController(IUnitOfWork context)
         {
             _uow = context;
         }

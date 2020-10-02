@@ -15,9 +15,9 @@ namespace AligatorApi.Controllers
     [ApiController]
     public class BillsController : ControllerBase
     {
-        private readonly UnitOfWork _uow;
+        private readonly IUnitOfWork _uow;
 
-        public BillsController(UnitOfWork context)
+        public BillsController(IUnitOfWork context)
         {
             _uow = context;
         }

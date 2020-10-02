@@ -15,9 +15,9 @@ namespace AligatorApi.Controllers
     [ApiController]
     public class NoticesController : ControllerBase
     {
-        private readonly UnitOfWork _uow;
+        private readonly IUnitOfWork _uow;
 
-        public NoticesController(UnitOfWork context)
+        public NoticesController(IUnitOfWork context)
         {
             _uow = context;
         }

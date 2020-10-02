@@ -26,7 +26,10 @@ namespace AligatorApi.Controllers
         [HttpGet]
         public  ActionResult<IEnumerable<Person>> GetPeople()
         {
-            return  _uow.RepositoryPerson.Get().ToList();
+            return  _uow.RepositoryPerson.Get()
+                .Include(p => p.Notices)
+                .Include(p => p.PersonBills)
+                .Include(p => p.PersonTasks).ToList();
         }
 
         // GET: api/People/5

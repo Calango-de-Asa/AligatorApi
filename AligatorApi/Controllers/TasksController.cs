@@ -12,9 +12,9 @@ namespace AligatorApi.Controllers
     [ApiController]
     public class TasksController : ControllerBase
     {
-        private readonly UnitOfWork _uow;
+        private readonly IUnitOfWork _uow;
 
-        public TasksController(UnitOfWork context)
+        public TasksController(IUnitOfWork context)
         {
             _uow = context;
         }
