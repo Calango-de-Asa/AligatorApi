@@ -1,10 +1,10 @@
-﻿using AligatorApi.Context;
-using AligatorApi.Models;
-using AligatorApi.Repository;
+﻿using AligatorApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using ThreadingTask = System.Threading.Tasks;
+using Task = AligatorApi.Models.Task;
 
 namespace AligatorApi.Controllers
 {
@@ -21,16 +21,16 @@ namespace AligatorApi.Controllers
 
         // GET: api/Tasks
         [HttpGet]
-        public ActionResult<IEnumerable<Task>> GetTasks()
+        public async ThreadingTask.Task<ActionResult<IEnumerable<Task>>> GetTasks()
         {
-            return _uow.RepositoryTask.Get().ToList();
+            return await _uow.RepositoryTask.Get().ToListAsync();
         }
 
         // GET: api/Tasks/5
         [HttpGet("{id}")]
-        public  ActionResult<Task> GetTask(int id)
+        public async ThreadingTask.Task<ActionResult<Task>> GetTask(int id)
         {
-            var task =  _uow.RepositoryTask.GetById(t => t.Id == id);
+            var task = await _uow.RepositoryTask.GetById(t => t.Id == id);
 
             if (task == null)
             {
@@ -86,9 +86,9 @@ namespace AligatorApi.Controllers
 
         // DELETE: api/Tasks/5
         [HttpDelete("{id}")]
-        public  ActionResult<Task> DeleteTask(int id)
+        public async ThreadingTask.Task<ActionResult<Task>> DeleteTask(int id)
         {
-            var task =  _uow.RepositoryTask.GetById(t => t.Id == id);
+            var task = await _uow.RepositoryTask.GetById(t => t.Id == id);
             if (task == null)
             {
                 return NotFound();

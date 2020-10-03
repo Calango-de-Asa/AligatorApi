@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AligatorApi.Controllers
 {
@@ -27,9 +28,9 @@ namespace AligatorApi.Controllers
 
         // GET: api/Houses/5
         [HttpGet("{id}")]
-        public  ActionResult<House> GetHouse(int id)
+        public async Task<ActionResult<House>> GetHouse(int id)
         {
-            var house =  _uow.RepositoryHouse.GetById(h => h.Id == id);
+            var house =  await _uow.RepositoryHouse.GetById(h => h.Id == id);
 
             if (house == null)
             {
@@ -85,9 +86,9 @@ namespace AligatorApi.Controllers
 
         // DELETE: api/Houses/5
         [HttpDelete("{id}")]
-        public  ActionResult<House> DeleteHouse(int id)
+        public async Task<ActionResult<House>> DeleteHouse(int id)
         {
-            var house =  _uow.RepositoryHouse.GetById(h => h.Id == id);
+            var house =  await _uow.RepositoryHouse.GetById(h => h.Id == id);
             if (house == null)
             {
                 return NotFound();

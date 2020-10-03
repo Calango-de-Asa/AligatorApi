@@ -31,9 +31,9 @@ namespace AligatorApi.Controllers
 
         // GET: api/Bills/5
         [HttpGet("{id}")]
-        public ActionResult<Bill> GetBill(int id)
+        public async Task<ActionResult<Bill>> GetBill(int id)
         {
-            var bill = _uow.RepositoryBill.GetById(p => p.Id == id);
+            var bill = await _uow.RepositoryBill.GetById(p => p.Id == id);
 
             if (bill == null)
             {
@@ -89,9 +89,9 @@ namespace AligatorApi.Controllers
 
         // DELETE: api/Bills/5
         [HttpDelete("{id}")]
-        public ActionResult<Bill> DeleteBill(int id)
+        public async Task<ActionResult<Bill>> DeleteBill(int id)
         {
-            var bill = _uow.RepositoryBill.GetById(p => p.Id == id);
+            var bill = await _uow.RepositoryBill.GetById(p => p.Id == id);
             if (bill == null)
             {
                 return NotFound();

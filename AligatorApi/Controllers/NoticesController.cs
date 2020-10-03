@@ -31,9 +31,9 @@ namespace AligatorApi.Controllers
 
         // GET: api/Notices/5
         [HttpGet("{id}")]
-        public  ActionResult<Notice> GetNotice(int id)
+        public async Task<ActionResult<Notice>> GetNotice(int id)
         {
-            var notice =  _uow.RepositoryNotice.GetById(n => n.Id == id);
+            var notice = await _uow.RepositoryNotice.GetById(n => n.Id == id);
 
             if (notice == null)
             {
@@ -89,16 +89,16 @@ namespace AligatorApi.Controllers
 
         // DELETE: api/Notices/5
         [HttpDelete("{id}")]
-        public  ActionResult<Notice> DeleteNotice(int id)
+        public async Task<ActionResult<Notice>> DeleteNotice(int id)
         {
-            var notice =  _uow.RepositoryNotice.GetById(r => r.Id == id);
+            var notice = await _uow.RepositoryNotice.GetById(r => r.Id == id);
             if (notice == null)
             {
                 return NotFound();
             }
 
             _uow.RepositoryNotice.Delete(notice);
-             _uow.Commit();
+            _uow.Commit();
 
             return notice;
         }

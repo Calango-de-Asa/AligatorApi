@@ -34,9 +34,9 @@ namespace AligatorApi.Controllers
 
         // GET: api/People/5
         [HttpGet("{id}")]
-        public  ActionResult<Person> GetPerson(int id)
+        public async Task<ActionResult<Person>> GetPerson(int id)
         {
-            var person =  _uow.RepositoryPerson.GetById(p => p.Id == id);
+            var person = await _uow.RepositoryPerson.GetById(p => p.Id == id);
 
             if (person == null)
             {
@@ -92,9 +92,9 @@ namespace AligatorApi.Controllers
 
         // DELETE: api/People/5
         [HttpDelete("{id}")]
-        public  ActionResult<Person> DeletePerson(int id)
+        public async Task<ActionResult<Person>> DeletePerson(int id)
         {
-            var person =  _uow.RepositoryPerson.GetById(p => p.Id == id);
+            var person = await _uow.RepositoryPerson.GetById(p => p.Id == id);
             if (person == null)
             {
                 return NotFound();
