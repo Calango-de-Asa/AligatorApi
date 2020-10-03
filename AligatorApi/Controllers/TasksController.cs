@@ -95,7 +95,7 @@ namespace AligatorApi.Controllers
             }
 
             _uow.RepositoryTask.Delete(task);
-             _uow.Commit();
+            await _uow.Commit();
 
             return task;
         }

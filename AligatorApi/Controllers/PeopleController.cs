@@ -1,13 +1,10 @@
-﻿using System;
+﻿using AligatorApi.Models;
+using AligatorApi.Repository;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AligatorApi.Context;
-using AligatorApi.Models;
-using AligatorApi.Repository;
 
 namespace AligatorApi.Controllers
 {

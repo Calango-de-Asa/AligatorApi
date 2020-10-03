@@ -31,6 +31,11 @@ namespace AligatorApi.Models
             Notices.Add(notice) ;
         }
 
+        public House HouseCreate(string houseName, int id = 0)
+        {
+            return new House(houseName: houseName, this, id);
+        }
+
         [Key]
         public int Id { get; set; }
         [NotMapped]
