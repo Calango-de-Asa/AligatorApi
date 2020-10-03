@@ -1,7 +1,4 @@
 ﻿using AligatorApi.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AligatorApi.Repository
@@ -61,9 +58,9 @@ namespace AligatorApi.Repository
             _context = context;
         }
 
-        public void Commit()
+        public async Task Commit()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public void Dispose()

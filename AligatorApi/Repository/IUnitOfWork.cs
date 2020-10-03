@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace AligatorApi.Repository
 {
@@ -13,6 +10,6 @@ namespace AligatorApi.Repository
         IRepositoryPerson RepositoryPerson { get; }
         IRepositoryTask RepositoryTask { get; }
 
-        void Commit();
+        Task Commit();
     }
 }
