@@ -1,13 +1,12 @@
-﻿using AligatorApi.Repository;
+﻿using AligatorApi.Pagination;
+using AligatorApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using ThreadingTask = System.Threading.Tasks;
-using Task = AligatorApi.Models.Task;
-using AligatorApi.Pagination;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Task = AligatorApi.Models.Task;
+using ThreadingTask = System.Threading.Tasks;
 
 namespace AligatorApi.Controllers
 {
