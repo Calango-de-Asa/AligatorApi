@@ -47,7 +47,6 @@ namespace AligatorApi.Models
         [Required]
         [MaxLength(60)]
         public string Name { get; set; }
-        [Required]
         [MaxLength(120)]
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
