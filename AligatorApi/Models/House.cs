@@ -7,18 +7,14 @@ namespace AligatorApi.Models
     {
         public House()
         {
+            Name = "New House";
             People = new HashSet<Person>();
         }
 
-        public House(int id)
+        public House(string houseName, Person p, int id = 0)
         {
             Id = id;
-            People = new HashSet<Person>();
-        }
-        
-        public House(int id, Person p)
-        {
-            Id = id;
+            Name = houseName;
             People = new HashSet<Person>();
             AddPerson(p);
             p.IsManager = true;
@@ -32,6 +28,9 @@ namespace AligatorApi.Models
 
         [Key]
         public int Id { get; set; }
+        [Required]
+        [MaxLength(30)]
+        public string Name { get; set; }
         public virtual ICollection<Person> People { get; }
     }
 }

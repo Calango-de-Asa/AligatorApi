@@ -1,7 +1,7 @@
 ﻿using AligatorApi.Context;
+using AligatorApi.Pagination;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -18,6 +18,16 @@ namespace AligatorApi.Repository
             _context = context;
         }
 
+        public virtual Expression<Func<T, object>> OrderFunction()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual PagedList<T> Get(PaginationParameters pp)
+        {
+            return PagedList<T>.ToPagedList(Get().OrderBy(OrderFunction()), pp.PageNumber, pp.PageSize);
+        }
+            
         public IQueryable<T> Get()
         {
             return _context.Set<T>().AsNoTracking();

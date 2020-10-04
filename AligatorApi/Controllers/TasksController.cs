@@ -1,10 +1,12 @@
-﻿using AligatorApi.Repository;
+﻿using AligatorApi.Pagination;
+using AligatorApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using ThreadingTask = System.Threading.Tasks;
+using System.Threading.Tasks;
 using Task = AligatorApi.Models.Task;
+using ThreadingTask = System.Threading.Tasks;
 
 namespace AligatorApi.Controllers
 {
@@ -19,16 +21,22 @@ namespace AligatorApi.Controllers
             _uow = context;
         }
 
-        // GET: api/Tasks
+        // GET: api/Tasks?PageNumber=x&PageSize=y
         [HttpGet]
-        public async ThreadingTask.Task<ActionResult<IEnumerable<Task>>> GetTasks()
+        public ActionResult<IEnumerable<Task>> GetTasks([FromQuery] PaginationParameters paginationParameters)
         {
-            return await _uow.RepositoryTask.Get().ToListAsync();
+            var values = _uow.RepositoryTask.Get(paginationParameters);
+
+            Response.Headers.Add(
+                "X-Pagination",
+                JsonConvert.SerializeObject(PagedList<Task>.GenPaginationMetadata(values)));
+
+            return  values;
         }
 
         // GET: api/Tasks/5
         [HttpGet("{id}")]
-        public async ThreadingTask.Task<ActionResult<Task>> GetTask(int id)
+        public async Task<ActionResult<Task>> GetTask(int id)
         {
             var task = await _uow.RepositoryTask.GetById(t => t.Id == id);
 
@@ -44,7 +52,7 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public  IActionResult PutTask(int id, Task task)
+        public async Task<IActionResult> PutTask(int id, Task task)
         {
             if (id != task.Id)
             {
@@ -55,7 +63,7 @@ namespace AligatorApi.Controllers
 
             try
             {
-                 _uow.Commit();
+                 await _uow.Commit();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -76,10 +84,10 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public  ActionResult<Task> PostTask(Task task)
+        public async Task<ActionResult<Task>> PostTask(Task task)
         {
             _uow.RepositoryTask.Add(task);
-             _uow.Commit();
+            await _uow.Commit();
 
             return CreatedAtAction("GetTask", new { id = task.Id }, task);
         }
@@ -95,7 +103,7 @@ namespace AligatorApi.Controllers
             }
 
             _uow.RepositoryTask.Delete(task);
-             _uow.Commit();
+            await _uow.Commit();
 
             return task;
         }

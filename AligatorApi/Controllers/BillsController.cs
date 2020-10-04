@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AligatorApi.Models;
+using AligatorApi.Pagination;
+using AligatorApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AligatorApi.Context;
-using AligatorApi.Models;
-using AligatorApi.Repository;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AligatorApi.Controllers
 {
@@ -22,11 +20,17 @@ namespace AligatorApi.Controllers
             _uow = context;
         }
 
-        // GET: api/Bills
+        // GET: api/Bills?PageNumber=x&PageSize=y
         [HttpGet]
-        public ActionResult<IEnumerable<Bill>> GetBills()
+        public ActionResult<IEnumerable<Bill>> GetBills([FromQuery] PaginationParameters paginationParameters)
         {
-            return _uow.RepositoryBill.Get().ToList();
+            var values = _uow.RepositoryBill.Get(paginationParameters);
+
+            Response.Headers.Add(
+                "X-Pagination",
+                JsonConvert.SerializeObject(PagedList<Bill>.GenPaginationMetadata(values)));
+
+            return values;
         }
 
         // GET: api/Bills/5
@@ -47,7 +51,7 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public IActionResult PutBill(int id, Bill bill)
+        public async Task<IActionResult> PutBill(int id, Bill bill)
         {
             if (id != bill.Id)
             {
@@ -58,7 +62,7 @@ namespace AligatorApi.Controllers
 
             try
             {
-                _uow.Commit();
+                await _uow.Commit();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,10 +83,10 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public ActionResult<Bill> PostBill(Bill bill)
+        public async Task<ActionResult<Bill>> PostBill(Bill bill)
         {
             _uow.RepositoryBill.Add(bill);
-            _uow.Commit();
+            await _uow.Commit();
 
             return CreatedAtAction("GetBill", new { id = bill.Id }, bill);
         }
@@ -98,7 +102,7 @@ namespace AligatorApi.Controllers
             }
 
             _uow.RepositoryBill.Delete(bill);
-            _uow.Commit();
+            await _uow.Commit();
 
             return bill;
         }

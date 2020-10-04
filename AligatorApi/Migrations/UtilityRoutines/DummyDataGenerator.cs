@@ -9,29 +9,32 @@ namespace AligatorApi.Migrations.UtilityRoutines
     {
         public static void Gen(MigrationBuilder mb)
         {
-            var house = new House(0);
-
-            mb.InsertData(
-                table: "House",
-                columns: new[] { "Id" },
-                values: new object[] { house.Id });
-
             var p1 = new Person(0, "Fulano de Tal", "fulano@exemplo.com", false);
             var p2 = new Person(1, "Cicrano de Tal", "cicrano@exemplo.com", false);
-            var p3 = new Person(2, "Beltrano de Tal", "Beltrano@exemplo.com", false);
-
+            var p3 = new Person(2, "Beltrano de Tal", "beltrano@exemplo.com", false);
+            var p4 = new Person(3, "Robson de Tal", "robson@exemplo.com", false);
 
             p1.NoticeCreate("Please stop washing underwear on the sink");
             p2.NoticeCreate("We are out of beer");
             p3.NoticeCreate("Our table is broken");
+            p4.NoticeCreate("Someone stole my bed");
+
+            var house = p1.HouseCreate("The castle of the houses", id: 0);
+
+            mb.InsertData(
+             table: "House",
+             columns: new[] { "Id", "Name" },
+             values: new object[] { house.Id, house.Name });
 
             house.AddPerson(p1);
             house.AddPerson(p2);
             house.AddPerson(p3);
+            house.AddPerson(p4);
 
             createPerson(mb, p1);
             createPerson(mb, p2);
             createPerson(mb, p3);
+            createPerson(mb, p4);
 
             var bill = new Bill(
                 id: 0,
@@ -51,6 +54,25 @@ namespace AligatorApi.Migrations.UtilityRoutines
 
             createTask(mb, task);
 
+            for (int i = 4, j = 1; i < 100; ++i)
+            {
+                var person = new Person(i, "Person " + i, $"person{i}@email.com", false);
+
+                if (i % 4 == 0)
+                {
+                    house = person.HouseCreate("House number " + j, j);
+                    ++j;
+
+                    mb.InsertData(
+                        table: "House",
+                        columns: new[] { "Id", "Name" },
+                        values: new object[] { house.Id, house.Name });
+                }
+
+                house.AddPerson(person);
+
+                createPerson(mb, person);
+            }
         }
 
         private static void createPerson(MigrationBuilder mb, Person p)
