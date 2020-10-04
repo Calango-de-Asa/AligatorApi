@@ -98,7 +98,7 @@ namespace AligatorApi.Controllers
             }
 
             _uow.RepositoryPerson.Delete(person);
-             _uow.Commit();
+            await _uow.Commit();
 
             return person;
         }

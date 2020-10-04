@@ -95,7 +95,7 @@ namespace AligatorApi.Controllers
             }
 
             _uow.RepositoryHouse.Delete(house);
-             _uow.Commit();
+            await _uow.Commit();
 
             return house;
         }
