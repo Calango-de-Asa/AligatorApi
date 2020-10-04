@@ -1,9 +1,9 @@
 ﻿using AligatorApi.Context;
 using AligatorApi.Models;
+using AligatorApi.Pagination;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace AligatorApi.Repository
 {
@@ -12,5 +12,13 @@ namespace AligatorApi.Repository
         public RepositoryNotice(DatabaseContext context) : base(context)
         {
         }
+
+        public override Expression<Func<Notice, object>> OrderFunction() => (x => x.CreatedAt);
+        public override PagedList<Notice> Get(PaginationParameters pp)
+        {
+            return PagedList<Notice>.ToPagedList(
+                Get().OrderByDescending(OrderFunction()), pp.PageNumber, pp.PageSize);
+        }
+
     }
 }

@@ -1,7 +1,9 @@
 ﻿using AligatorApi.Models;
+using AligatorApi.Pagination;
 using AligatorApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,9 +23,15 @@ namespace AligatorApi.Controllers
 
         // GET: api/Houses
         [HttpGet]
-        public  ActionResult<IEnumerable<House>> GetHouse()
+        public  ActionResult<IEnumerable<House>> GetHouse([FromQuery] PaginationParameters paginationParameters)
         {
-            return  _uow.RepositoryHouse.Get().ToList();
+            var values = _uow.RepositoryHouse.Get(paginationParameters);
+
+            Response.Headers.Add(
+                   "X-Pagination",
+                   JsonConvert.SerializeObject(PagedList<House>.GenPaginationMetadata(values)));
+
+            return values;
         }
 
         // GET: api/Houses/5
@@ -44,7 +52,7 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public  IActionResult PutHouse(int id, House house)
+        public async Task<IActionResult> PutHouse(int id, House house)
         {
             if (id != house.Id)
             {
@@ -55,7 +63,7 @@ namespace AligatorApi.Controllers
 
             try
             {
-                _uow.Commit();
+                await _uow.Commit();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -76,10 +84,10 @@ namespace AligatorApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public  ActionResult<House> PostHouse(House house)
+        public async Task<ActionResult<House>> PostHouse(House house)
         {
             _uow.RepositoryHouse.Add(house);
-             _uow.Commit();
+            await _uow.Commit();
 
             return CreatedAtAction("GetHouse", new { id = house.Id }, house);
         }

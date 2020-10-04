@@ -1,9 +1,7 @@
 ﻿using AligatorApi.Context;
 using AligatorApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace AligatorApi.Repository
 {
@@ -12,5 +10,6 @@ namespace AligatorApi.Repository
         public RepositoryHouse(DatabaseContext context) : base(context)
         {
         }
+        public override Expression<Func<House, object>> OrderFunction() => (x => x.Name);
     }
 }

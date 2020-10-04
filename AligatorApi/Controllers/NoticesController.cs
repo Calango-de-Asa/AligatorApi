@@ -1,7 +1,9 @@
 ﻿using AligatorApi.Models;
+using AligatorApi.Pagination;
 using AligatorApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,9 +23,15 @@ namespace AligatorApi.Controllers
 
         // GET: api/Notices
         [HttpGet]
-        public  ActionResult<IEnumerable<Notice>> GetNotices()
+        public  ActionResult<IEnumerable<Notice>> GetNotices([FromQuery] PaginationParameters paginationParameters)
         {
-            return  _uow.RepositoryNotice.Get().ToList();
+            var values = _uow.RepositoryNotice.Get(paginationParameters);
+
+            Response.Headers.Add(
+                "X-Pagination",
+                JsonConvert.SerializeObject(PagedList<Notice>.GenPaginationMetadata(values)));
+
+            return values;
         }
 
         // GET: api/Notices/5
